@@ -1,3 +1,10 @@
+# TravelMate
+>
+
+<img width="1742" alt="Capture d’écran 2019-06-24 à 19 53 10" src="https://user-images.githubusercontent.com/9087165/60042091-2ed1d680-96bd-11e9-8dc7-f313de72979f.png">
+
+Still work in progress, documentation will come soon.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
