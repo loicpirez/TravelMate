@@ -7,6 +7,8 @@ import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Container from '../AppContainer'
 import { getTowns } from '../../utils/api'
+import { toggleLocationAction } from '../../actions'
+import { connect } from 'react-redux'
 
 function TabContainer (props) {
   return (
@@ -27,12 +29,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function TabsWrappedLabel () {
+export function TabsWrappedLabel (props) {
   const classes = useStyles()
   const initialTown = getTowns().shift()
   const [value, setValue] = React.useState(initialTown)
 
   function handleChange (event, newValue) {
+    props.toggleLocationAction(newValue, props.location.selectedType)
     setValue(newValue)
   }
 
@@ -43,7 +46,27 @@ export default function TabsWrappedLabel () {
           {getTowns().map((town) => { return <Tab value={town} key={town} label={town} wrapped /> })}
         </Tabs>
       </AppBar>
-      {value === initialTown && <TabContainer><Container /></TabContainer>}
+      {value === props.location.town && <TabContainer><Container /></TabContainer>}
     </div>
   )
 }
+
+TabsWrappedLabel.propTypes = {
+  toggleLocationAction: PropTypes.func,
+  location: PropTypes.object
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleLocationAction: (town, selectedType) => {
+      dispatch(toggleLocationAction(town, selectedType))
+    }
+  }
+}
+
+function mapStateToProps (state) {
+  const { location } = state
+  return { location }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabsWrappedLabel)

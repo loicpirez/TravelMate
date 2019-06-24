@@ -5,6 +5,9 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
 import clsx from 'clsx'
 import Icon from '@material-ui/core/Icon'
 import React from 'react'
+import { toggleLocationAction } from '../../actions'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,9 +17,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function BottomBar () {
+export function BottomBar (props) {
   const classes = useStyles()
-  const [setValue] = React.useState('recents')
+  const [value, setValue] = React.useState('recents')
 
   React.useEffect(() => {
     loadCSS(
@@ -26,11 +29,13 @@ export default function BottomBar () {
   }, [])
 
   function handleChange (event, newValue) {
+    props.toggleLocationAction(props.location.town, newValue)
     setValue(newValue)
   }
 
+  // town type
   return (
-    <BottomNavigation value={'Visites'} onChange={handleChange} className={classes.root}>
+    <BottomNavigation value={props.location.selectedType} onChange={handleChange} className={classes.root}>
       <BottomNavigationAction label="Beauté" value="Beauté — Bien-être" icon={<Icon className={clsx(classes.icon, 'fa fa-kiss-beam')} />} />
       <BottomNavigationAction label="Maison" value="Maison — déco" icon={<Icon className={clsx(classes.icon, 'fa fa-home')} />} />
       <BottomNavigationAction label="Transports" value="Transports — voyages" icon={<Icon className={clsx(classes.icon, 'fa fa-plane')} />} />
@@ -45,3 +50,23 @@ export default function BottomBar () {
     </BottomNavigation>
   )
 }
+
+BottomBar.propTypes = {
+  toggleLocationAction: PropTypes.func,
+  location: PropTypes.object
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleLocationAction: (town, selectedType) => {
+      dispatch(toggleLocationAction(town, selectedType))
+    }
+  }
+}
+
+function mapStateToProps (state) {
+  const { location } = state
+  return { location }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BottomBar)

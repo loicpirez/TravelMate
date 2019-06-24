@@ -8,6 +8,8 @@ import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import { getPlaces } from '../../utils/api'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,9 +36,10 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 12
   } }))
 
-export default function AppContainer () {
+export function AppContainer (props) {
   const classes = useStyles()
-  const data = getPlaces('Beijing', 'Visites')
+  const data = getPlaces(props.location.town, props.location.selectedType)
+  console.log(props)
 
   const singleCard = (place) => {
     if (!place) { return <div className="undefined"/> }
@@ -52,7 +55,7 @@ export default function AppContainer () {
             {place.nom}
           </Typography>
           <Typography className={classes.pos} color="textSecondary">
-            {place.avis_petitfute.replace(/<(.|\n)*?>/g, '').substring(0, 300) + '...'}
+            {place.avis_petitfute ? place.avis_petitfute.replace(/<(.|\n)*?>/g, '').substring(0, 300) + '...' : ''}
           </Typography>
           <Typography variant="body1" component="p">
             {place.adresse_1}
@@ -93,3 +96,14 @@ export default function AppContainer () {
     </React.Fragment>
   )
 }
+
+AppContainer.propTypes = {
+  location: PropTypes.object.isRequired
+}
+
+function mapStateToProps (state) {
+  const { location } = state
+  return { location }
+}
+
+export default connect(mapStateToProps)(AppContainer)

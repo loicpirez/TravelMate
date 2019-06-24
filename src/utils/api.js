@@ -12,10 +12,13 @@ const getAttractionsTypes = (town) => {
 }
 
 const getPlaces = (town, type) => {
+  console.log(town, type)
   let result = []
   Object.keys(places[town]).forEach((t) => {
     if (type === (Object.keys(Object.values(places[town])[t]).shift())) {
       result = places[town][t][type]
+    } else {
+      console.log(town, type)
     }
   })
   return result
